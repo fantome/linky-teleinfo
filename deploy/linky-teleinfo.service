@@ -1,0 +1,14 @@
+[Unit]
+Description=Linky Teleinfo Service
+Requires=network.target
+After=syslog.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/linky-teleinfo.py
+StandardOutput=syslog
+StandardError=syslog
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

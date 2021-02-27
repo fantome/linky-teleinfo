@@ -1,0 +1,41 @@
+---
+- hosts: all
+  tasks:
+    - name: Deploy script
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../src/teleinfo.py"
+        dest: /usr/bin/linky-teleinfo.py
+        owner: root
+        group: root
+        mode: 755
+      become: true
+
+    - name: Check config file exists
+      ansible.builtin.file:
+        path: /etc/linky-teleinfo.conf
+        state: file
+        owner: root
+        group: root
+        mode: 600
+      become: true
+    
+    - name: Create service file
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../linky-teleinfo.service"
+        dest: /etc/systemd/system/linky-teleinfo.service
+        owner: root
+        group: root
+        mode: 755
+      become: true
+
+    - name: Enable linky-teleinfo service
+      ansible.builtin.service:
+        name: linky-teleinfo
+        enabled: yes
+      become: true
+
+    - name: Start linky-teleinfo service
+      ansible.builtin.service:
+        name: linky-teleinfo
+        state: restarted
+      become: true
